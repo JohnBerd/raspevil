@@ -1,0 +1,9 @@
+#!/bin/bash
+
+proc=$(screen -ls | sed -n 2p | sed 's/\t/,/g' | sed 's///g' | cut -d, -f2)
+if [ "$proc" = "" ]
+then
+    screen msfconsole
+else
+    screen -r $proc
+fi
