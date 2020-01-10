@@ -1,5 +1,20 @@
 #!/bin/bash
 
+header() {
+    echo "$(tput setaf 2)
+       .~~.   .~~.
+      '. \ ' ' / .'$(tput setaf 1)
+       .~ .~~~..~.
+      : .\\ '~' /. :
+     ~ (  \\   /  ) ~
+    ( : '~'.~.'~' : )
+     ~ .~ (   ) ~. ~
+      (  : '~' :  ) $(tput sgr0)RaspEvil$(tput setaf 1)
+       '~ .~~~. ~'
+           '~'
+    $(tput sgr0)"
+}
+
 isInstalled() {
     installed=$(dpkg -l $1 2> /dev/null)
     if [ "$installed" == "" ]
@@ -42,10 +57,10 @@ configMsmtp() {
     
     echo "If the configure is OK, you should receive a mail in less than a minute :)"
     echo "Hello! Your raspevil mail configuration is correctly done" | msmtp $email
+    echo "If not, ensure it is not in the spam inbox or check the mail configuration to activate imap and pop3 options"
 }
 
-USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
-
+header
 checkRoot
 isInstalled metasploit-framework
 isInstalled ca-certificates
