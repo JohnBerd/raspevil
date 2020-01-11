@@ -1,0 +1,165 @@
+#!/bin/python3
+
+import sys
+import os
+from os.path import expanduser
+
+file_mail = expanduser("~") + "/raspevil/emails"
+
+def header():
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("""
+        \033[1;32;40m
+       .~~.   .~~.
+      '. \ ' ' / .'\033[1;31;40m
+       .~ .~~~..~.
+      : .\\ '~' /. :
+     ~ (  \\   /  ) ~
+    ( : '~'.~.'~' : )
+     ~ .~ (   ) ~. ~
+      (  : '~' :  ) \033[1;0;40m RaspEvil\033[1;31;40m
+       '~ .~~~. ~'
+           '~'
+\033[1;0;40m
+           """)
+
+
+def exit():
+    sys.exit(0)
+
+
+def print_back():
+    input("Press ENTER to get back to the main menu\n")
+    
+
+def mail_config():
+    menu(mail_menu, mail_switcher, list_mails)
+
+
+def change_backdoor():
+    header()
+    print("change_backdoor")
+    print_back()
+
+
+def upload_usb():
+    header()
+    print("upload usb")
+    print_back()
+
+
+def launch():
+    header()
+    print("launch")
+    print_back()
+
+
+def switcher(var_switcher, value):
+    header()
+    func = var_switcher.get(int(value), lambda: "Invalid choice")
+    print(func())
+
+def mail_sender_config():
+    os.system("./config_msmtp")
+    print_back()
+
+def mail_add_receiver():
+    add_mail()
+
+def mail_delete_receiver():
+    f = open(file_mail, "r").readlines()
+    menu_delete_mail(f)
+
+def mail_test():
+    print("If the configure is OK, you should receive a mail in the receivers mailboxes within few seconds :)")
+    # script send mail
+    print("If not, ensure it is not in the spam inbox or check the mail configuration to activate imap and pop3 options")
+    print_back()
+
+
+def nothing():
+    pass
+
+
+def menu(options, var_switcher, fun=nothing):
+    while True:
+        header()
+        fun()
+        for i, item in enumerate(options):
+            print("[", i + 1, "]\033[1;30;40m", item, "\033[1;0;40m")
+        print("[", len(options) + 1, "\033[1;0;40m]", "\033[1;31;40mBack\033[1;0;40m")
+        print()
+        value = input("Please choose an option:\n")
+        try:
+            value = int(value)
+        except:
+            print("Invalid choice")
+            continue
+        if value == len(options) + 1:
+            break
+        switcher(var_switcher, value)
+
+
+def delete_mail_index(options, value):
+    del options[value - 1]
+    with open(file_mail, 'w+') as file:
+        for item in options:
+            file.write("%s" % item)
+
+
+def menu_delete_mail(options):
+    value = 0
+    while value < 1 or value > len(options) + 1:
+        for i, item in enumerate(options):
+            print("[", i + 1, "]\033[1;30;40m", item.replace('\n', ''), "\033[1;0;40m")
+        print("[", len(options) + 1, "\033[1;0;40m]", "\033[1;31;40mBack\033[1;0;40m")
+        print()
+        value = input("Which email do you want to delete?\n")
+        try:
+            value = int(value)
+        except:
+            print("Invalid choice")
+            value = 0
+            continue
+        if value == len(options) + 1:
+            break
+        delete_mail_index(options, value)
+
+
+def list_mails():
+    print("\033[1;93;40mSender:\033[1;0;40m")
+    os.system("cat ~/.msmtprc | grep from | cut -d' ' -f2")
+    print()
+    print("\033[1;93;40mReceivers:\033[1;0;40m")
+    f = open(file_mail, "r").readlines()
+    for line in f:
+        print(line.replace('\n', ''))
+    print()
+
+
+def add_mail():
+    with open(file_mail, 'a') as file:
+        file.write(input('Email to add: ') + '\n')
+
+
+try:
+    main_menu = ["Email configuration", "Change backdoor", "Upload to Bad USB", "Launch"]
+    mail_menu = ["Configure the mail sender", "Add a mail receiver", "Delete a mail receiver", "Test the configuration"]
+    main_switcher = {
+        1: mail_config,
+        2: change_backdoor,
+        3: upload_usb,
+        4: launch,
+    }
+    mail_switcher = {
+        1: mail_sender_config,
+        2: mail_add_receiver,
+        3: mail_delete_receiver,
+        4: mail_test,
+    }
+    menu(main_menu, main_switcher)
+except:
+    header()
+    print("Thanks for using my script")
+    print("Good Bye :)")
+    sys.exit(0)
