@@ -20,7 +20,7 @@ isInstalled() {
     if [ "$installed" == "" ]
     then
         echo -e "\e[31m[ - ] $1 not yet installed\e[0m"
-        apt install $1
+        sudo apt install $1
     else
         echo -e "\e[32m[ + ] $1 already installed\e[0m"
     fi
@@ -35,8 +35,13 @@ checkRoot() {
 
 clear
 header
-checkRoot
 isInstalled metasploit-framework
 isInstalled ca-certificates
 isInstalled msmtp
 isInstalled screen
+mkdir -p ~/raspevil
+mkdir -p ~/raspevil/backdoors
+mkdir -p ~/raspevil/credentials
+mkdir -p ~/raspevil/tmp
+touch ~/raspevil/emails
+touch ~/.msmtprc
