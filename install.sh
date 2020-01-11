@@ -33,37 +33,10 @@ checkRoot() {
     fi
 }
 
-configMsmtp() {
-    file_path="$HOME/.msmtprc"
-    echo -e ""
-    if test -f $file_path ; then
-        echo "Your email seems to already have been configured"
-        while [[ $answer != 'y' ]] && [[ $answer != 'n' ]]
-        do
-            read -p "Do you want to override the configuration? (y/n): " answer
-        done
-    fi
-    if [ "$answer" == "n" ]; then return; fi
-    read -p 'Your e-mail: ' email
-    read -p 'Your SMTP server (smtp.gmail.com for gmail): ' smtp
-    read -sp 'Your password: ' password
-    echo -e ""
-
-    cp res/.msmtprc $HOME
-    sed -i "s/host.*/host $smtp/g" $file_path
-    sed -i "s/from.*/from $email/g" $file_path
-    sed -i "s/user.*/user $email/g" $file_path
-    sed -i "s/password.*/password $password/g" $file_path
-    
-    echo "If the configure is OK, you should receive a mail in less than a minute :)"
-    echo "Hello! Your raspevil mail configuration is correctly done" | msmtp $email
-    echo "If not, ensure it is not in the spam inbox or check the mail configuration to activate imap and pop3 options"
-}
-
+clear
 header
 checkRoot
 isInstalled metasploit-framework
 isInstalled ca-certificates
 isInstalled msmtp
 isInstalled screen
-configMsmtp
