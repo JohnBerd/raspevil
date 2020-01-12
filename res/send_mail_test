@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sender=$(cat ~/.msmtprc | grep from | cut -d' ' -f2)
+mail_test=$(cat ~/raspevil/mail_models/mail_test)
+
+while read p; do
+    echo "$mail_test" | sed "s/To:.*/To\ :\ $p/g" | sed "s/From:.*/From\ :\ $sender/g" | msmtp $p
+done < ~/raspevil/emails

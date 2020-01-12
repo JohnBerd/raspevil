@@ -60,7 +60,7 @@ def switcher(var_switcher, value):
     print(func())
 
 def mail_sender_config():
-    os.system("./config_msmtp")
+    os.system("config_msmtp")
     print_back()
 
 def mail_add_receiver():
@@ -72,7 +72,7 @@ def mail_delete_receiver():
 
 def mail_test():
     print("If the configure is OK, you should receive a mail in the receivers mailboxes within few seconds :)")
-    # script send mail
+    os.system("send_mail_test")
     print("If not, ensure it is not in the spam inbox or check the mail configuration to activate imap and pop3 options")
     print_back()
 
