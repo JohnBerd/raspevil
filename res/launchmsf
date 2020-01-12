@@ -3,7 +3,7 @@
 proc=$(screen -ls | sed -n 2p | sed 's/\t/,/g' | sed 's///g' | cut -d, -f2)
 if [ "$proc" = "" ]
 then
-    screen msfconsole
+    screen msfconsole -r ~/raspevil/launch.rc
 else
     screen -r $proc
 fi

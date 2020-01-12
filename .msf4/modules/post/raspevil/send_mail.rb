@@ -20,7 +20,7 @@ class MetasploitModule < Msf::Post
 
   def run
     puts 'Hello, world!'
-    exec '~/test.sh'
+    system("send_mail")
   end
 
 end
