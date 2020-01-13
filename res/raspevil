@@ -3,6 +3,7 @@
 import sys
 import os
 from os.path import expanduser
+from functools import partial
 
 file_mail = expanduser("~") + "/raspevil/emails"
 
@@ -36,10 +37,8 @@ def mail_config():
     menu(mail_menu, mail_switcher, list_mails)
 
 
-def change_backdoor():
-    header()
-    print("change_backdoor")
-    print_back()
+def network_config():
+    menu(network_menu, network_switcher)
 
 
 def upload_usb():
@@ -141,13 +140,28 @@ def add_mail():
     with open(file_mail, 'a') as file:
         file.write(input('Email to add: ') + '\n')
 
+def write_config(filename, text):
+    with open(expanduser("~") + "/raspevil/config/" + filename, 'w+') as file:
+        file.write(input(text + ": "))
+
+
+def set_vpn_file(text):
+    with open(expanduser("~") + "/raspevil/config/" + text, 'w+') as file:
+        file.write(input("Your choice: "))
+
+
+def set_backdoor(text):
+    with open(expanduser("~") + "/raspevil/config/" + text, 'w+') as file:
+        file.write(input("Your choice: "))
+
 
 try:
-    main_menu = ["Email configuration", "Change backdoor", "Upload to Bad USB", "Launch"]
+    main_menu = ["Email Configuration", "Network Configuration", "Upload to Bad USB", "Launch"]
     mail_menu = ["Configure the mail sender", "Add a mail receiver", "Delete a mail receiver", "Test the configuration"]
+    network_menu = ["Set LHOST", "Set Internal LPORT", "Set External Port", "Set OpenVPN file", "Set Backdoor Link"]
     main_switcher = {
         1: mail_config,
-        2: change_backdoor,
+        2: network_config,
         3: upload_usb,
         4: launch,
     }
@@ -156,6 +170,13 @@ try:
         2: mail_add_receiver,
         3: mail_delete_receiver,
         4: mail_test,
+    }
+    network_switcher = {
+        1: partial(write_config, "lhost", network_menu[0]),
+        2: partial(write_config, "ilport", network_menu[1]),
+        3: partial(write_config, "elport", network_menu[2]),
+        4: partial(set_vpn_file, network_menu[3]),
+        5: partial(set_backdoor, network_menu[4]),
     }
     menu(main_menu, main_switcher)
 except:

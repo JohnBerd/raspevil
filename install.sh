@@ -26,24 +26,6 @@ isInstalled() {
     fi
 }
 
-isInstalledSnap() {
-    installed=$(command -v $1)
-    if [ "$installed" == "" ]
-    then
-        echo -e "\e[31m[ - ] $1 not yet installed\e[0m"
-        sudo snap install $1
-    else
-        echo -e "\e[32m[ + ] $1 already installed\e[0m"
-    fi
-}
-
-checkRoot() {
-    if [ "$EUID" -ne 0 ]
-    then echo -e "\e[31mPlease run as root\e[m"
-        exit
-    fi
-}
-
 clear
 header
 isInstalled metasploit-framework
