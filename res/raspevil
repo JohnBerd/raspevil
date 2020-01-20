@@ -2,10 +2,14 @@
 
 import sys
 import os
+from os.path import exists
 from os.path import expanduser
 from functools import partial
+from pathlib import Path
+
 
 file_mail = expanduser("~") + "/raspevil/emails"
+
 
 def header():
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -29,6 +33,14 @@ def exit():
     sys.exit(0)
 
 
+def check(filename):
+    return get_file(filename) != ""
+
+
+def check_mail_receiver():
+    return os.system("cat ~/.msmtprc | grep from | cut -d' ' -f2") != ""
+
+
 def print_back():
     input("Press ENTER to get back to the main menu\n")
     
@@ -38,7 +50,7 @@ def mail_config():
 
 
 def network_config():
-    menu(network_menu, network_switcher)
+    menu(network_menu, network_switcher, display_config)
 
 
 def upload_usb():
@@ -146,13 +158,51 @@ def write_config(filename, text):
 
 
 def set_vpn_file(text):
-    with open(expanduser("~") + "/raspevil/config/" + text, 'w+') as file:
-        file.write(input("Your choice: "))
+    file = ""
+    while not exists(file) or not file.endswith('.pem'):
+        file = input("Path of the VPN file provided by Portmap.io: ")
+        file = file.replace('~', expanduser("~"))
+        os.system("cp", file, "~/raspevil/config")
 
 
 def set_backdoor(text):
-    with open(expanduser("~") + "/raspevil/config/" + text, 'w+') as file:
-        file.write(input("Your choice: "))
+    file = ""
+    while not exists(file):
+        file = input("Path of the backdoor: ")
+        file = file.replace('~', expanduser("~"))
+        os.system("sudo cp", file, "/var/www/html")
+
+
+def get_file(filename):
+    if not exists(filename):
+        return ""
+    with open(filename, 'r') as f:
+        return f.read()
+
+
+def display_config():
+    print("\033[1;93;40mLHOST: \033[1;0;40m", end='')
+    print(get_file(expanduser("~") + "/raspevil/config/lhost"))
+    print("\033[1;93;40mInternal LPORT: \033[1;0;40m", end='')
+    print(get_file(expanduser("~") + "/raspevil/config/ilport"))
+    print("\033[1;93;40mExternal LPORT: \033[1;0;40m", end='')
+    print(get_file(expanduser("~") + "/raspevil/config/elport"))
+    print("\033[1;93;40mOpenVPN file: \033[1;0;40m", end='')
+    print(get_file(expanduser("~") + "/raspevil/config/caca.pem"))
+    print("\033[1;93;40mBackdoor: \033[1;0;40m", end='')
+    print()
+    print()
+
+
+def launch():
+    # check all information
+    # launch vpn
+    # check port forwarding 80
+    # check port forwarding 22
+    # check port forwarding payload port
+    # launch metasploit
+    # launch apache 2
+    pass
 
 
 try:
