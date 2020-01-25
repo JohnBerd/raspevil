@@ -32,9 +32,20 @@ isInstalled metasploit-framework
 isInstalled ca-certificates
 isInstalled msmtp
 isInstalled screen
-isInstalled snapd
-isInstalledSnap ngrok
+isInstalled python3
+isInstalled xterm
+if [ "$(command -v arduino-cli)" == "" ]
+then
+    echo -e "\e[31m[ - ] arduino-cli not yet installed\e[0m"
+    curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sudo sh
+    sudo mv bin/arduino-cli /usr/local/bin
+    rm -rf bin
+    arduino-cli core install arduino:avr
+else
+    echo -e "\e[32m[ + ] arduino-cli already installed\e[0m"
+fi
 touch ~/.msmtprc
 cp -r raspevil-config ~/raspevil
 cp -r .msf4 ~
 sudo cp res/* /usr/local/bin
+sed -i "s@homepath@$HOME@g" ~/raspevil/autorunscript.rc

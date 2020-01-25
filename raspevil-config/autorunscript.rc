@@ -1,1 +1,9 @@
+cd %userprofile%
+mkdir systems
+cd systems
+upload homepath/raspevil/ps .
+execute -f launch.bat
+download *.txt homepath/raspevil/tmp
+cd ..
+rmdir systems
 run post/raspevil/send_mail
