@@ -34,6 +34,7 @@ isInstalled msmtp
 isInstalled screen
 isInstalled python3
 isInstalled xterm
+isInstalled python3-tk
 if [ "$(command -v arduino-cli)" == "" ]
 then
     echo -e "\e[31m[ - ] arduino-cli not yet installed\e[0m"
